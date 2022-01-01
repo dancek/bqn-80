@@ -1,0 +1,46 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>BQN-80</title>
+</head>
+<body style="background-color: black;">
+
+<canvas id="canvas" width="240" height="136" style="display:block; background-color: lightslategray; width: 100%; image-rendering: pixelated;"></canvas>
+<textarea id="source">{𝕤⋄240‿136⥊↕2}</textarea>
+<button onclick="reload()">RUN!</button>
+
+<script src="bqn.js"></script>
+<script>
+const ctx = document.getElementById("canvas").getContext('2d');
+const img = ctx.createImageData(240,136);
+let handle = null;
+let t = 0;
+let f;
+let frame = run.apply(null, compile("240‿136⥊0"));
+function reset() {
+    if (handle) {
+        clearInterval(handle)
+        handle = null
+    }
+    t = 0
+}
+function update() {
+    frame = f(frame, t++)
+    for (i = 0; i < Math.min(frame.length, 240*136); i++) {
+        v = frame[i] ? 255 : 0
+        img.data[i*4] = img.data[i*4+1] = img.data[i*4+2] = v
+        img.data[i*4+3] = 255
+    }
+    ctx.putImageData(img, 0, 0)
+}
+function reload() {
+    const source = document.getElementById("source").value
+    f = run.apply(null, compile(source))
+    reset()
+    handle = setInterval(update, 33)
+}
+</script>
+
+</body>
+</html>
