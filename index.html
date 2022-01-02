@@ -11,6 +11,7 @@
 <textarea id="source" style="width: 100%; height: 8em;"></textarea>
 <button onclick="reload()">RUN! (shift-enter)</button>
 <button onclick="stop()">STOP!</button>
+<div id="charcount" style="float: right"></div>
 
 <h1>BQN-80</h1>
 <p>Write a function that gets timestep (starting from 0, incrementing on each frame) as left argument and previous frame as right argument, and returns a frame (240x136 array of values 0-15). Other types of output result in undefined behavior (for now).</p>
@@ -78,10 +79,11 @@ function update() {
     ctx.putImageData(img, 0, 0)
 }
 function reload() {
-    const src = source.value
-    f = run.apply(null, compile(src))
+    const src = Array.from(source.value)
+    f = run.apply(null, compile(str(src)))
     reset()
-    location.hash = src.replace(/\n/g, "%0A")
+    document.getElementById("charcount").innerText = `${src.length} chars`
+    location.hash = source.value.replace(/\n/g, "%0A")
     handle = setInterval(update, 16)
 }
 
