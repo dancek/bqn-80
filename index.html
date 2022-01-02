@@ -21,7 +21,9 @@
 const source = document.getElementById("source")
 const error = document.getElementById("error")
 const ctx = document.getElementById("canvas").getContext('2d')
-const img = ctx.createImageData(240,136)
+ctx.fillRect(0,0,240,136)
+const img = ctx.getImageData(0,0,240,136)
+
 const palette = [
     "#1a1c2c",
     "#5d275d",
@@ -56,7 +58,7 @@ function reset() {
     stop()
     error.innerText = ""
     t = 0
-    frame = run.apply(null, compile("240‿136⥊0"))
+    frame = run.apply(null, compile("136‿240⥊0"))
 }
 function update() {
     try {
@@ -71,7 +73,7 @@ function update() {
         img.data[i*4] = c[0]
         img.data[i*4+1] = c[1]
         img.data[i*4+2] = c[2]
-        img.data[i*4+3] = 255
+        //img.data[i*4+3] = 255
     }
     ctx.putImageData(img, 0, 0)
 }
@@ -86,7 +88,7 @@ function reload() {
 if (location.hash.length > 1) {
     source.value = decodeURIComponent(location.hash.slice(1))
 } else {
-    source.value = "{240‿136⥊16|𝕨+↕16}"
+    source.value = "{136‿240⥊16|𝕨+↕16}"
 }
 
 
