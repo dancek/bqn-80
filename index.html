@@ -15,7 +15,7 @@
 <div id="charcount" style="float: right"></div>
 
 <h1>BQN-80</h1>
-<p>Write a function that gets timestep (starting from 0, incrementing on each frame) as left argument and previous frame as right argument, and returns a frame (240x136 array of values 0-15). Other types of output result in undefined behavior (for now).</p>
+<p>Write a function that gets timestep (starting from 0, incrementing on each frame) as left argument and previous frame as right argument, and returns a frame (240x136 array of numbers, which will be mapped to a 16-color palette with `& 0x0f`). Note that BQN-80 is still experimental and everything may still change.</p>
 <p>Standard <a href="https://mlochbaum.github.io/BQN/keymap.html">BQN keymap</a> works with the prefix <kbd>\</kbd>.</p>
 
 <script src="bqn.js"></script>
@@ -72,7 +72,7 @@ function update() {
         stop()
     }
     for (i = 0; i < Math.min(frame.length, 240*136); i++) {
-        v = frame[i] < palette.length ? frame[i] : 0
+        v = frame[i] & 0x0f
         c = palette[v]
         img.data[i*4] = c[0]
         img.data[i*4+1] = c[1]
