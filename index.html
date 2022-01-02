@@ -1,4 +1,21 @@
 <!doctype html>
+<!--
+BQN-80, a fantasy sizecoding platform
+Copyright (C) 2022 Hannu Hartikainen <hannu@hrtk.in>
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-->
 <html>
 <head>
 <meta charset="utf-8"/>
@@ -15,8 +32,13 @@
 <div id="charcount" style="float: right"></div>
 
 <h1>BQN-80</h1>
-<p>Write a function that gets timestep (starting from 0, incrementing on each frame) as left argument and previous frame as right argument, and returns a frame (240x136 array of numbers, which will be mapped to a 16-color palette with `& 0x0f`). Note that BQN-80 is still experimental and everything may still change.</p>
+<p>Write a function that gets timestep (starting from 0, incrementing on each frame) as left argument and previous frame as right argument, and returns a frame (240x136 array of numbers, which will be mapped to a 16-color palette with <code>&amp;&nbsp;0x0f</code>). Note that BQN-80 is still experimental and everything may still change.</p>
 <p>Standard <a href="https://mlochbaum.github.io/BQN/keymap.html">BQN keymap</a> works with the prefix <kbd>\</kbd>.</p>
+
+<h2>License</h2>
+<p>Copyright 2022 Hannu Hartikainen.<br>BQN-80 is free software: you can redistribute it and/or modify it under the terms of the <a href="COPYING">GNU General Public License</a> as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.</p>
+
+<p>BQN-80 is based on BQN.js by Marshall Lochbaum. BQN.js is licensed under the terms of the <a href="LICENSE.bqnjs">ISC License</a>.</p>
 
 <script src="bqn.js"></script>
 <script>
