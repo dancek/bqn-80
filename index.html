@@ -91,12 +91,13 @@ function reload() {
     f = run.apply(null, compile(str(src)))
     reset()
     document.getElementById("charcount").innerText = `${src.length} chars`
-    location.hash = source.value.replace(/\n/g, "%0A")
+    location.hash = "c=" + btoa(String.fromCharCode(...new TextEncoder().encode(source.value)))
     handle = setInterval(update, 16)
 }
 
-if (location.hash.length > 1) {
-    source.value = decodeURIComponent(location.hash.slice(1))
+if (location.hash.length > 3 && location.hash.startsWith("#c=")) {
+    source.value = new TextDecoder().decode(
+        new Uint8Array([...atob(location.hash.slice(3))].map(c=>c.charCodeAt(0))))
 } else {
     source.value = "{136‿240⥊16|𝕨+↕16}"
 }
