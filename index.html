@@ -8,7 +8,7 @@
 <body style="font-size: 20px; margin: 0 auto; max-width: 960px; box-sizing: border-box;">
 <canvas id="canvas" width="240" height="136" style="display:block; width: 100%; image-rendering: pixelated;"></canvas>
 <textarea id="source" style="margin: 1rem 0; width: 100%; height: 8em;"></textarea>
-<button onclick="reload()">RUN!</button>
+<button onclick="reload()">RUN! (shift-enter)</button>
 
 <h1>BQN-80</h1>
 <p>Write a function that gets timestep (starting from 0, incrementing on each frame) as left argument and previous frame as right argument, and returns a frame (240x136 array of values 0-15). Other types of output result in undefined behavior (for now).</p>
@@ -91,20 +91,24 @@ source.onkeydown = (e) => {
     const w = e.which
     if (16 <= w && w <= 20)
         return
+    else if (w == 13 && e.shiftKey) {
+        reload()
+        return false
+    }
     else if (compose) {
         compose = false
         const c = keys[k]
         if (c) {
             const t = e.target
-            e.preventDefault()
-            let v = t.value;
-            let i = t.selectionStart;
-            t.value = v.slice(0,i)+c+v.slice(t.selectionEnd);
-            t.selectionStart = t.selectionEnd = i+c.length;
+            let v = t.value
+            let i = t.selectionStart
+            t.value = v.slice(0,i)+c+v.slice(t.selectionEnd)
+            t.selectionStart = t.selectionEnd = i+c.length
+            return false
         }
     } else if (k === '\\') {
         compose = true
-        e.preventDefault()
+        return false
     }
 }
 </script>
