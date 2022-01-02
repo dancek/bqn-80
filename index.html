@@ -1,44 +1,111 @@
 <!doctype html>
 <html>
 <head>
-    <meta charset="utf-8"/>
-    <title>BQN-80</title>
+<meta charset="utf-8"/>
+<title>BQN-80</title>
 </head>
-<body style="background-color: black;">
 
-<canvas id="canvas" width="240" height="136" style="display:block; background-color: lightslategray; width: 100%; image-rendering: pixelated;"></canvas>
-<textarea id="source">{𝕤⋄240‿136⥊↕2}</textarea>
+<body style="font-size: 20px; margin: 0 auto; max-width: 960px; box-sizing: border-box;">
+<canvas id="canvas" width="240" height="136" style="display:block; width: 100%; image-rendering: pixelated;"></canvas>
+<textarea id="source" style="margin: 1rem 0; width: 100%; height: 8em;"></textarea>
 <button onclick="reload()">RUN!</button>
+
+<h1>BQN-80</h1>
+<p>Write a function that gets timestep (starting from 0, incrementing on each frame) as left argument and previous frame as right argument, and returns a frame (240x136 array of values 0-15). Other types of output result in undefined behavior (for now).</p>
+<p>Standard <a href="https://mlochbaum.github.io/BQN/keymap.html">BQN keymap</a> works with the prefix <kbd>\</kbd>.</p>
 
 <script src="bqn.js"></script>
 <script>
-const ctx = document.getElementById("canvas").getContext('2d');
-const img = ctx.createImageData(240,136);
-let handle = null;
-let t = 0;
-let f;
-let frame = run.apply(null, compile("240‿136⥊0"));
+const source = document.getElementById("source")
+const ctx = document.getElementById("canvas").getContext('2d')
+const img = ctx.createImageData(240,136)
+const palette = [
+    "#1a1c2c",
+    "#5d275d",
+    "#b13e53",
+    "#ef7d57",
+    "#ffcd75",
+    "#a7f070",
+    "#38b764",
+    "#257179",
+    "#29366f",
+    "#3b5dc9",
+    "#41a6f6",
+    "#73eff7",
+    "#f4f4f4",
+    "#94b0c2",
+    "#566c86",
+    "#333c57",
+].map(v => [16,8,0].map(b => parseInt(v.slice(1), 16)>>b & 0xff))
+
+let handle = null
+let t = 0
+let f
+let frame
+
 function reset() {
     if (handle) {
         clearInterval(handle)
         handle = null
     }
     t = 0
+    frame = run.apply(null, compile("240‿136⥊0"))
 }
 function update() {
     frame = f(frame, t++)
     for (i = 0; i < Math.min(frame.length, 240*136); i++) {
-        v = frame[i] ? 255 : 0
-        img.data[i*4] = img.data[i*4+1] = img.data[i*4+2] = v
+        v = frame[i] < palette.length ? frame[i] : 0
+        c = palette[v]
+        img.data[i*4] = c[0]
+        img.data[i*4+1] = c[1]
+        img.data[i*4+2] = c[2]
         img.data[i*4+3] = 255
     }
     ctx.putImageData(img, 0, 0)
 }
 function reload() {
-    const source = document.getElementById("source").value
-    f = run.apply(null, compile(source))
+    const src = source.value
+    f = run.apply(null, compile(src))
     reset()
-    handle = setInterval(update, 33)
+    location.hash = src.replace(/\n/g, "%0A")
+    handle = setInterval(update, 16)
+}
+
+if (location.hash.length > 1) {
+    source.value = decodeURIComponent(location.hash.slice(1))
+} else {
+    source.value = "{240‿136⥊16|𝕨+↕16}"
+}
+
+
+// Rest of code copied/adapted from https://github.com/mlochbaum/BQN/blob/master/docs/repl.js
+
+let kk=Array.from('`123456890-=~!@#$%^&*()_+qwertuiop[]QWERTIOP{}asdfghjkl;ASFGHKL:"zxcvbm,./ZXVBM<>? \'')
+let kv=Array.from('˜˘¨⁼⌜´˝∞¯•÷×¬⎉⚇⍟◶⊘⎊⍎⍕⟨⟩√⋆⌽𝕨∊↑∧⊔⊏⊐π←→↙𝕎⍷𝕣⍋⊑⊒⍳⊣⊢⍉𝕤↕𝕗𝕘⊸∘○⟜⋄↖𝕊𝔽𝔾«⌾»·˙⥊𝕩↓∨⌊≡∾≍≠⋈𝕏⍒⌈≢≤≥⇐‿↩')
+let keys={}
+kk.map((k,i)=>{keys[k]=kv[i]})
+
+let compose = false
+source.onkeydown = (e) => {
+    const k = e.key
+    const w = e.which
+    if (16 <= w && w <= 20)
+        return
+    else if (compose) {
+        compose = false
+        const c = keys[k]
+        if (c) {
+            const t = e.target
+            e.preventDefault()
+            let v = t.value;
+            let i = t.selectionStart;
+            t.value = v.slice(0,i)+c+v.slice(t.selectionEnd);
+            t.selectionStart = t.selectionEnd = i+c.length;
+        }
+    } else if (k === '\\') {
+        compose = true
+        e.preventDefault()
+    }
 }
 </script>
 
