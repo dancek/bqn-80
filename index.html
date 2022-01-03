@@ -123,7 +123,12 @@ function update() {
 }
 function reload() {
     const src = Array.from(source.value)
-    f = run.apply(null, compile(str(src)))
+    try {
+        f = run.apply(null, compile(str(src)))
+    } catch(e) {
+        error.innerText = fmtErr(e)
+        return;
+    }
     reset()
     document.getElementById("charcount").innerText = `${src.length} chars`
     location.hash = "c=" + btoa(String.fromCharCode(...new TextEncoder().encode(source.value)))
